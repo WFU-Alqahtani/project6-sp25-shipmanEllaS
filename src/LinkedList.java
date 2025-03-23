@@ -1,6 +1,14 @@
+/**********************************************************************************************
+ * @file : LinkedList.java
+ * @description : A linked list class that manages nodes with data of type Card. Notable
+ *                functions include shuffling the cards, adding/removing cards, printing
+ *                individual nodes, checking for an empty list, and a sanity check.
+ * @author : Ella Shipman
+ * @date : 23 March 2025
+ *********************************************************************************************/
+
 import java.util.Random;
 
-// linked list class for a deck of cards
 public class LinkedList {
 
     public Node head;
@@ -13,6 +21,10 @@ public class LinkedList {
         size = 0;
     }
 
+    /*  --------------------------------------------------------------------------------------
+     *   shuffle - shuffles the cards in the deck
+     *   int shuffle_count : the number of times the deck is shuffled
+     */
     public void shuffle(int shuffle_count) {
 
         Random rand = new Random();
@@ -21,12 +33,19 @@ public class LinkedList {
             int r1 = rand.nextInt(52);
             int r2 = rand.nextInt(52);
 
+            if (r1 == r2) {
+                r2 += 1;
+            }
             swap(r1,r2); // swap nodes at these indices
         }
     }
 
-    // remove a card from a specific index
+    /*  --------------------------------------------------------------------------------------
+     *   remove_from_index - removes card at a certain index
+     *   int index : the card to be removed
+     */
     public Card remove_from_index(int index) {
+        size--;
         Node prev = head;
         Node curr = head.next;
 
@@ -41,17 +60,21 @@ public class LinkedList {
             curr = curr.next;
         }
         atIndex = curr.data;
-        for (int i = index; i <= size -1; i++) {
+        for (int i = index; i <= size; i++) {
             prev.data = curr.data;
             prev = prev.next;
             curr = curr.next;
         }
-        size--;
         return atIndex;
     }
 
-    // insert a card at a specific index
+    /*  --------------------------------------------------------------------------------------
+     *   insert_from_index - inserts card at a certain index
+     *   Card x : the card to be inserted
+     *   int index : the place to insert the card
+     */
     public void insert_at_index(Card x, int index) {
+        size++;
         Node prev = head;
         Node after = head.next;
         Node temp;
@@ -67,7 +90,7 @@ public class LinkedList {
             newNode.next = head;
             head = newNode;
         } else {                //Insert at other places
-            while (index <= size -1) {
+            while (place <= index && after != null) {
                 if (place == index) {
                     prev.next = newNode;
                     newNode.next = after;
@@ -77,17 +100,17 @@ public class LinkedList {
                 place++;
             }
         }
-        size++;
     }
 
-    // swap two cards in the deck at the specific indices
-    public void swap(int index1, int index2) {
+    /*  --------------------------------------------------------------------------------------
+     *   swap - swaps the positions of two cards at specific indexes
+     *   int index1 : the first index to swap
+     *   int index2 + the second index to swap
+     */    public void swap(int index1, int index2) {
         Node card1 = new Node();
         Node card2 = new Node();
 
-        //int maxIndex = Math.max(index1, index2);
-        Node prev = head;
-        Node curr = head.next;
+        Node curr = head;
         int place = 0;
         //Finding card1 and card2
         while (curr != null) {
@@ -97,7 +120,6 @@ public class LinkedList {
             if (place == index2) {
                 card2 = curr;
             }
-            prev = prev.next;
             curr = curr.next;
             place++;
         }
@@ -108,35 +130,50 @@ public class LinkedList {
         card2.data = temp.data;
     }
 
-    // add card at the end of the list
+    /*  --------------------------------------------------------------------------------------
+     *   add_at_tail - appends card to the end of the list
+     *   Card data : the card to be added
+     */
     public void add_at_tail(Card data) {
+        size++;
         Node newTail = new Node(data);
         if (head == null) {     //No head
             head = newTail;
             tail = newTail;
-            tail.prev = null;
-            tail.next = null;
+        } else if (head != null && head.next == null) {
+            head.next = newTail;
+            tail = newTail;
+            tail.prev = head;
         } else {        //Add to end
             tail.next = newTail;
             newTail.prev = tail;
-            newTail.next = null;
             tail = newTail;
         }
-        size++;
     }
 
-    // remove a card from the beginning of the list
+    /*  --------------------------------------------------------------------------------------
+     *   remove_from_head - removes card at the top of the deck
+     */
     public Card remove_from_head() {
+        size--;
         Node prev = head;
         Node curr = head.next;
 
         Card atIndex = head.data;
+        if (curr == null) {
+            head = null;
+            return atIndex;
+        }
+
         while (curr != null) {
             prev.data = curr.data;
+            if (curr.next == null) {
+                prev.next = null;
+                tail = prev;
+            }
             prev = prev.next;
             curr = curr.next;
         }
-        size--;
         return atIndex;
     }
 
@@ -176,7 +213,9 @@ public class LinkedList {
         }
     }
 
-    // print the deck
+    /*  --------------------------------------------------------------------------------------
+     *   print - printing the deck
+     */
     public void print() {
         Node curr = head;
         int i = 1;
@@ -192,5 +231,15 @@ public class LinkedList {
             curr = curr.next;
         }
         System.out.println("");
+    }
+
+    /*  --------------------------------------------------------------------------------------
+     *   isEmpty - checks if the list is empty
+     */
+    public boolean isEmpty() {
+        if (head == null) {
+            return true;
+        }
+        return false;
     }
 }
