@@ -27,27 +27,117 @@ public class LinkedList {
 
     // remove a card from a specific index
     public Card remove_from_index(int index) {
-        // FIXME
+        Node prev = head;
+        Node curr = head.next;
+
+        if (index >= size) {
+            System.out.println("Cannot remove card at index " + index);
+            System.exit(1);
+        }
+
+        Card atIndex;
+        for (int i = 0; i <= index; i++) {
+            prev = prev.next;
+            curr = curr.next;
+        }
+        atIndex = curr.data;
+        for (int i = index; i <= size -1; i++) {
+            prev.data = curr.data;
+            prev = prev.next;
+            curr = curr.next;
+        }
+        size--;
+        return atIndex;
     }
 
     // insert a card at a specific index
     public void insert_at_index(Card x, int index) {
-        // FIXME
+        Node prev = head;
+        Node after = head.next;
+        Node temp;
+        int place = 0;
+
+        if (index >= size) {
+            System.out.println("Cannot insert Card " + x + " at index " + index);
+        }
+
+        Node newNode = new Node(x);
+
+        if (index == 0) {       //Insert at the head
+            newNode.next = head;
+            head = newNode;
+        } else {                //Insert at other places
+            while (index <= size -1) {
+                if (place == index) {
+                    prev.next = newNode;
+                    newNode.next = after;
+                }
+                prev = prev.next;
+                after = after.next;
+                place++;
+            }
+        }
+        size++;
     }
 
     // swap two cards in the deck at the specific indices
     public void swap(int index1, int index2) {
-        // FIXME
+        Node card1 = new Node();
+        Node card2 = new Node();
+
+        //int maxIndex = Math.max(index1, index2);
+        Node prev = head;
+        Node curr = head.next;
+        int place = 0;
+        //Finding card1 and card2
+        while (curr != null) {
+            if (place == index1) {
+                card1 = curr;
+            }
+            if (place == index2) {
+                card2 = curr;
+            }
+            prev = prev.next;
+            curr = curr.next;
+            place++;
+        }
+
+        //Swapping
+        Node temp = new Node(card1.data);
+        card1.data = card2.data;
+        card2.data = temp.data;
     }
 
     // add card at the end of the list
     public void add_at_tail(Card data) {
-        // FIXME
+        Node newTail = new Node(data);
+        if (head == null) {     //No head
+            head = newTail;
+            tail = newTail;
+            tail.prev = null;
+            tail.next = null;
+        } else {        //Add to end
+            tail.next = newTail;
+            newTail.prev = tail;
+            newTail.next = null;
+            tail = newTail;
+        }
+        size++;
     }
 
     // remove a card from the beginning of the list
     public Card remove_from_head() {
-        // FIXME
+        Node prev = head;
+        Node curr = head.next;
+
+        Card atIndex = head.data;
+        while (curr != null) {
+            prev.data = curr.data;
+            prev = prev.next;
+            curr = curr.next;
+        }
+        size--;
+        return atIndex;
     }
 
     // check to make sure the linked list is implemented correctly by iterating forwards and backwards

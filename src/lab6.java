@@ -14,7 +14,6 @@ public class lab6 {
                 }
             }
         }
-
         return deck;
     }
 
